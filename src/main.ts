@@ -76,7 +76,7 @@ function crawl(path: string, fileName: string) {
 				try {
 					console.log('crawling', app.appid.toString());
 
-					while (parallelDownloads > 10) {
+					while (parallelDownloads > 30) {
 						await sleep(1)
 					}
 
@@ -101,8 +101,8 @@ function crawl(path: string, fileName: string) {
 
 
 crawl(
-	"https://steamcdn-a.akamaihd.net/steam/apps/{id}/header.jpg",
-	"header"
+	"https://steamcdn-a.akamaihd.net/steam/apps/{id}/capsule_sm_120.jpg",
+	"capsule_sm_120"
 ).then(() => {
 	console.log("done");
 });
