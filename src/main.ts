@@ -1,4 +1,5 @@
 import request = require("request");
+import clear = require("clear");
 import {ItemList} from "./interfaces";
 import * as fs from "fs";
 
@@ -41,7 +42,9 @@ function crawl(path: string, fileName: string) {
 
 
 		const join = () => {
-			console.log((++i / count * 100).toFixed(2) + "%");
+			clear();
+
+			console.log(++i, 'of', count, 'items', (++i / count * 100).toFixed(2) + "%");
 
 			if (i === count) {
 				resolve();
