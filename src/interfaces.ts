@@ -1,4 +1,4 @@
-export interface StorePage {
+export interface ItemList {
 	applist: {
 		apps: {
 			appid: number
