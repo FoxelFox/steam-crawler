@@ -27,6 +27,12 @@ function fetch(path) {
 	});
 }
 
+function sleep(ms){
+	return new Promise(resolve=>{
+		setTimeout(resolve,ms)
+	})
+}
+
 function crawl(path: string, fileName: string) {
 	return new Promise(async (resolve) => {
 
@@ -51,6 +57,8 @@ function crawl(path: string, fileName: string) {
 			}
 		};
 
+		let parallelDownloads = 0;
+
 		for (const app of items.applist.apps) {
 
 			const appFileName = "crawled" + "/" + app.appid + "/" + fileName + ".jpg";
@@ -60,12 +68,29 @@ function crawl(path: string, fileName: string) {
 				fs.mkdirSync(appFolderName);
 			}
 
-			if (!fs.existsSync(appFileName)) {
-				const body = await fetch(path.replace("{id}", app.appid.toString()));
 
-				fs.writeFile(appFileName, body, "binary", () => {
-					join();
-				});
+
+			if (!fs.existsSync(appFileName)) {
+
+				try {
+					console.log('crawling', app.appid.toString());
+
+					while (parallelDownloads > 10) {
+						await sleep(1)
+					}
+
+					parallelDownloads++;
+					fetch(path.replace("{id}", app.appid.toString())).then((body) => {
+						fs.writeFile(appFileName, body, "binary", () => {
+							parallelDownloads--;
+							join();
+						});
+					});
+				} catch (e) {
+					console.log(e);
+				}
+
+
 			} else {
 				join();
 			}
