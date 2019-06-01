@@ -50,7 +50,8 @@ function crawl(path: string, fileName: string) {
 		const join = () => {
 			clear();
 
-			console.log(++i, 'of', count, 'items', (++i / count * 100).toFixed(2) + "%");
+			++i;
+			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
 
 			if (i === count) {
 				resolve();
