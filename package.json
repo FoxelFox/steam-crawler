@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "run": "npm run build && node dist/main.js",
+    "crawl-images": "npm run build && node dist/crawl-images.js",
     "resize": "npm run build && node dist/resize.js"
   },
   "repository": {
