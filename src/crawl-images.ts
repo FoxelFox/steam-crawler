@@ -2,17 +2,9 @@ import request = require("request");
 import clear = require("clear");
 import {ItemList} from "./interfaces";
 import * as fs from "fs";
+import {getItems} from "./utils";
 
 let items: ItemList;
-
-
-function getItems(): Promise<ItemList> {
-	return new Promise((resolve) => {
-		request("http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json", (err, res, body) => {
-			resolve(JSON.parse(body) as ItemList);
-		});
-	});
-}
 
 
 function fetch(path) {
