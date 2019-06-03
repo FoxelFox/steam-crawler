@@ -16,7 +16,7 @@ async function run() {
 		appIndex++;
 		try {
 			const palette = await Vibrant.from('crawled/' + app.appid + '/64.jpg').getPalette();
-			const colors = palette.Vibrant.getRgb();
+			const colors = palette.Muted.getRgb();
 
 			let colorIndex = 0;
 			for (const color of colors) {
