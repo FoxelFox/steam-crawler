@@ -7,6 +7,7 @@
     "build": "tsc -p src/tsconfig.json",
     "crawl-index": "npm run build && node dist/crawl-index.js",
     "crawl-images": "npm run build && node dist/crawl-images.js",
+    "more-like-this": "npm run build && node dist/more-like-this.js",
     "items": "npm run build && node dist/items.js",
     "ssim": "npm run build && node dist/ssim.js",
     "tensorflow": "npm run build && node dist/tensorflow.js",

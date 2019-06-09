@@ -38,6 +38,9 @@ async function run() {
 }
 
 run().then(() => {
-	fs.writeFileSync("crawled/items.json", JSON.stringify(items));
+	if (!fs.existsSync("crawled-meta")) {
+		fs.mkdirSync("crawled-meta");
+	}
+	fs.writeFileSync("crawled-meta/items.json", JSON.stringify(items));
 	console.log("done");
 });
