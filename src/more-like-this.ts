@@ -2,6 +2,8 @@ import * as fs from "fs";
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
 
+const map = {};
+
 async function run() {
 	return new Promise((resolve) => {
 		const apps = fs.readdirSync("crawled");
@@ -15,13 +17,33 @@ async function run() {
 					if (match) {
 						const edges = JSON.parse("[" + match[0].split("[")[1].split("]")[0] + "]");
 						for (const edge of edges) {
-							csv += [app, edge, 1].join("|") + "\n"
+							if (!map[app]) {
+								map[app] = [];
+							}
+
+							if (!map[edge]) {
+								map[edge] = [];
+							}
+
+							if (map[app].indexOf(edge) === -1) {
+								map[app].push(edge);
+							}
+
+							if (map[edge].indexOf(app) === -1) {
+								map[edge].push(app);
+							}
+
 						}
 					}
 				}
 				i++;
 
 				if (i === count) {
+					for (const key in map) {
+						for (const edge of map[key]) {
+							csv += [key, edge, 1].join("|") + "\n";
+						}
+					}
 					resolve(csv);
 				}
 			});
