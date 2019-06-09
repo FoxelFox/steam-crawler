@@ -2,7 +2,8 @@ import * as fs from "fs";
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
 
-const map = {};
+const directMap = {};
+const indirectMap = {};
 
 async function run() {
 	return new Promise((resolve) => {
@@ -17,20 +18,22 @@ async function run() {
 					if (match) {
 						const edges = JSON.parse("[" + match[0].split("[")[1].split("]")[0] + "]");
 						for (const edge of edges) {
-							if (!map[app]) {
-								map[app] = [];
+							if (!directMap[app]) {
+								directMap[app] = [];
 							}
 
-							if (!map[edge]) {
-								map[edge] = [];
+							if (directMap[app].indexOf(edge) === -1) {
+								directMap[app].push(edge);
 							}
 
-							if (map[app].indexOf(edge) === -1) {
-								map[app].push(edge);
+							if (!indirectMap[edge]) {
+								indirectMap[edge] = [];
 							}
 
-							if (map[edge].indexOf(app) === -1) {
-								map[edge].push(app);
+
+
+							if (indirectMap[edge].indexOf(app) === -1) {
+								indirectMap[edge].push(app);
 							}
 
 						}
@@ -39,8 +42,17 @@ async function run() {
 				i++;
 
 				if (i === count) {
-					for (const key in map) {
-						for (const edge of map[key]) {
+
+					for (const key in indirectMap) {
+						if (!directMap[key]) {
+							directMap[key] = indirectMap[key].slice(0, 15);
+						}
+					}
+
+
+
+					for (const key in directMap) {
+						for (const edge of directMap[key]) {
 							csv += [key, edge, 1].join("|") + "\n";
 						}
 					}
