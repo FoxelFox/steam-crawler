@@ -88,9 +88,10 @@ function crawl(path: string, fileName: string) {
 }
 
 
+
 crawl(
-	"https://steamcdn-a.akamaihd.net/steam/apps/{id}/capsule_sm_120.jpg",
-	"capsule_sm_120"
+	"https://steamcdn-a.akamaihd.net/steam/apps/{id}/" + process.argv[2] + ".jpg",
+	process.argv[2]
 ).then(() => {
 	console.log("done");
 });

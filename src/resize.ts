@@ -10,9 +10,9 @@ const count = apps.length;
 async function run() {
 	for (const app of apps) {
 
-		if (!fs.existsSync("crawled/" + app+ "/128.jpg")) {
+		if (!fs.existsSync("crawled/" + app+ "/" + process.argv[2] + ".jpg")) {
 			try {
-				await sharp("crawled/" + app+ "/header.jpg").resize(128, 128).toFile("crawled/" + app + "/128.jpg")
+				await sharp("crawled/" + app+ "/header.jpg").resize(process.argv[2], process.argv[2]).toFile("crawled/" + app + "/" + process.argv[2] + ".jpg")
 			} catch (e) {
 				// ignore
 			}
@@ -25,8 +25,10 @@ async function run() {
 	}
 }
 
-run();
+run().then(() => {
+	console.log("done");
+});
 
-console.log("done");
+
 
 
