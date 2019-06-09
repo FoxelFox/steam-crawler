@@ -2,7 +2,7 @@ import request = require("request");
 import clear = require("clear");
 import {ItemList} from "./interfaces";
 import * as fs from "fs";
-import {getItems} from "./utils";
+import {getItems, sleep} from "./utils";
 
 let items: ItemList;
 
@@ -19,11 +19,7 @@ function fetch(path) {
 	});
 }
 
-function sleep(ms){
-	return new Promise(resolve=>{
-		setTimeout(resolve,ms)
-	})
-}
+
 
 function crawl(path: string, fileName: string) {
 	return new Promise(async (resolve) => {

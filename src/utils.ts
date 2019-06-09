@@ -8,3 +8,9 @@ export function getItems(): Promise<ItemList> {
 		});
 	});
 }
+
+export function sleep(ms){
+	return new Promise(resolve=>{
+		setTimeout(resolve,ms)
+	})
+}
