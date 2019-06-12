@@ -51,7 +51,6 @@ async function run() {
 				created++;
 			} catch (e) {
 				error++;
-				break;
 			}
 		}
 
