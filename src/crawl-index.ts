@@ -31,6 +31,8 @@ async function run() {
 
 	const count = items.applist.apps.length;
 	let i = 0;
+	let created = 0;
+	let error = 0;
 
 	for (const app of items.applist.apps) {
 
@@ -46,8 +48,9 @@ async function run() {
 			try {
 				const index = await getIndex(app.appid);
 				fs.writeFileSync(appFileName, index);
+				created++;
 			} catch (e) {
-				console.log(e);
+				error++;
 				break;
 			}
 		}
@@ -55,7 +58,7 @@ async function run() {
 		clear();
 
 		++i;
-		console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
+		console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%", "created", created, "errors", error);
 
 	}
 }

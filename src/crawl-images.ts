@@ -5,7 +5,8 @@ import * as fs from "fs";
 import {getItems, sleep} from "./utils";
 
 let items: ItemList;
-
+let error = 0;
+let created = 0;
 
 function fetch(path) {
 	return new Promise((resolve, reject) => {
@@ -39,7 +40,7 @@ function crawl(path: string, fileName: string) {
 			clear();
 
 			++i;
-			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
+			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%", "created", created, "errors", error);
 
 			if (i === count) {
 				resolve();
@@ -62,7 +63,6 @@ function crawl(path: string, fileName: string) {
 			if (!fs.existsSync(appFileName)) {
 
 				try {
-					console.log('crawling', app.appid.toString());
 
 					while (parallelDownloads > 30) {
 						await sleep(1)
@@ -72,11 +72,12 @@ function crawl(path: string, fileName: string) {
 					fetch(path.replace("{id}", app.appid.toString())).then((body) => {
 						fs.writeFile(appFileName, body, "binary", () => {
 							parallelDownloads--;
+							created++;
 							join();
 						});
 					});
 				} catch (e) {
-					console.log(e);
+					error++;
 				}
 
 

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
     "crawl-index": "npm run build && node dist/crawl-index.js",
-    "crawl-images": "npm run build && node dist/crawl-images.js",
+    "crawl-images": "npm run build && node dist/crawl-images.js header",
     "more-like-this": "npm run build && node dist/more-like-this.js",
     "items": "npm run build && node dist/items.js",
     "ssim": "npm run build && node dist/ssim.js",
