@@ -30,15 +30,22 @@ function getIndex(id) {
 async function run() {
 	items = await getItems();
 
-	const count = items.applist.apps.length;
+
 	let i = 0;
 	let created = 0;
 	let error = 0;
 
-	for (const app of items.applist.apps) {
+	let ids = items.applist.apps.map(i => i.appid);
+	if (fs.existsSync("crawled-meta/hidden.json")) {
+		ids = ids.concat(fs.readFileSync("crawled-meta/hidden.json").toJSON());
+	}
 
-		const appFileName = "crawled" + "/" + app.appid + "/index.html";
-		const appFolderName = "crawled" + "/" + app.appid.toString();
+	const count = ids.length;
+
+	for (const id of ids) {
+
+		const appFileName = "crawled" + "/" + id + "/index.html";
+		const appFolderName = "crawled" + "/" + id.toString();
 
 		if (!fs.existsSync(appFolderName)) {
 			fs.mkdirSync(appFolderName);
@@ -47,7 +54,7 @@ async function run() {
 
 		if (!fs.existsSync(appFileName) || process.argv[2] === "force") {
 			try {
-				const index = await getIndex(app.appid);
+				const index = await getIndex(id);
 				fs.writeFileSync(appFileName, index);
 				created++;
 			} catch (e) {
