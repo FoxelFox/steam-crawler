@@ -4,6 +4,7 @@ let csv = "itemIdPremise|itemIdConclusion|support\n";
 
 const directMap = {};
 const indirectMap = {};
+const foundWithRecommendations = [];
 
 async function run() {
 	return new Promise((resolve) => {
@@ -32,8 +33,6 @@ async function run() {
 							indirectMap[edge] = [];
 						}
 
-
-
 						if (indirectMap[edge].indexOf(app) === -1) {
 							indirectMap[edge].push(app);
 						}
@@ -52,6 +51,7 @@ async function run() {
 				for (const key in indirectMap) {
 					if (!directMap[key]) {
 						directMap[key] = indirectMap[key].slice(0, 15);
+						foundWithRecommendations.push(key);
 					}
 				}
 
@@ -62,7 +62,9 @@ async function run() {
 						csv += [key, edge, 1].join("|") + "\n";
 					}
 				}
-				resolve(csv);
+
+
+				resolve({csv});
 			}
 
 		}
@@ -78,6 +80,7 @@ run().then((csv) => {
 	}
 
 	fs.writeFileSync("crawled-meta/resultrules.csv", csv);
+	fs.writeFileSync("crawled-meta/hidden.json", JSON.stringify(foundWithRecommendations));
 
 	console.log("done");
 });
