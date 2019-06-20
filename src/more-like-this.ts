@@ -102,7 +102,7 @@ async function run() {
 				}
 
 
-				resolve({csv});
+				resolve(csv);
 			}
 
 		}
