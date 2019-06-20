@@ -4,7 +4,9 @@ import request = require("request");
 export function getItems(): Promise<ItemList> {
 	return new Promise((resolve) => {
 		request("http://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=STEAMKEY&format=json", (err, res, body) => {
-			resolve(JSON.parse(body) as ItemList);
+			let items = JSON.parse(body) as ItemList;
+			items.applist.apps = items.applist.apps.sort((a, b) => a.appid - b.appid);
+			resolve(items);
 		});
 	});
 }

@@ -11,7 +11,8 @@ function getIndex(id) {
 	return new Promise(async (resolve, reject) => {
 		request("https://store.steampowered.com/app/" + id, {
 			headers: {
-				"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"
+				"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36",
+				"Cookie": request.cookie("lastagecheckage=21-0-1988; birthtime=567039601")
 			}
 		}, (err, res, body) => {
 			if (err) {
@@ -44,7 +45,7 @@ async function run() {
 		}
 
 
-		if (!fs.existsSync(appFileName)) {
+		if (!fs.existsSync(appFileName) || process.argv[2] === "force") {
 			try {
 				const index = await getIndex(app.appid);
 				fs.writeFileSync(appFileName, index);
@@ -61,7 +62,6 @@ async function run() {
 
 	}
 }
-
 
 run().then(() => {
 	console.log("done");

@@ -11,7 +11,9 @@
     "items": "npm run build && node dist/items.js",
     "ssim": "npm run build && node dist/ssim.js",
     "tensorflow": "npm run build && node dist/tensorflow.js",
-    "resize": "npm run build && node dist/resize.js"
+    "resize": "npm run build && node dist/resize.js",
+    "crawl-all-continue": "npm run build && node dist/crawl-index.js && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js",
+    "crawl-all": "npm run build && node dist/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js"
   },
   "repository": {
     "type": "git",
@@ -24,8 +26,6 @@
   },
   "homepage": "https://github.com/FoxelFox/steam-crawler#readme",
   "devDependencies": {
-    "@tensorflow-models/mobilenet": "^1.0.1",
-    "@tensorflow/tfjs-node": "^1.1.2",
     "@types/node": "^12.0.4",
     "clear": "^0.1.0",
     "image-ssim": "^0.2.0",

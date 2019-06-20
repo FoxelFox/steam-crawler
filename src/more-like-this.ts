@@ -15,30 +15,68 @@ async function run() {
 		for (const app of apps) {
 
 			try {
+
+
 				const data = fs.readFileSync("crawled/" + app + "/index.html", {encoding: "utf-8"})
-				const match = data.match(/(RenderMoreLikeThisBlock.*)/g);
+
+
+				// APP TO APP
+				let match = data.match(/(RenderMoreLikeThisBlock.*)/g);
+
+				let edges = [];
 
 				if (match) {
-					const edges = JSON.parse("[" + match[0].split("[")[1].split("]")[0] + "]");
-					for (const edge of edges) {
-						if (!directMap[app]) {
-							directMap[app] = [];
-						}
+					edges = JSON.parse("[" + match[0].split("[")[1].split("]")[0] + "]");
+				}
 
-						if (directMap[app].indexOf(edge) === -1) {
-							directMap[app].push(edge);
-						}
 
-						if (!indirectMap[edge]) {
-							indirectMap[edge] = [];
-						}
+
+
+				// DLC TO DLC
+				match = data.match(/(RenderMoreDLCFromBaseGameBlock.*)/g);
+				if (match) {
+					const dlcEdges = JSON.parse("[" + match[0].split("[")[1].split("]")[0] + "]")
+
+					for (const dlc of dlcEdges) {
+						edges.push(dlc.toString());
+
+					}
+
+					// link basegame
+					try {
+						const base = data.match(/(<p>This content requires the base game <a href="https:\/\/store.steampowered.com\/app\/.*)/g).toString().split("/")[4];
+						edges.push(base);
+					} catch (e) {
+						// ignore
+					}
+
+
+
+				}
+
+				//console.log(edges);
+
+
+				for (const edge of edges) {
+					if (!directMap[app]) {
+						directMap[app] = [];
+					}
+
+					if (directMap[app].indexOf(edge) === -1) {
+						directMap[app].push(edge);
+					}
+
+					if (!indirectMap[edge]) {
+						indirectMap[edge] = [];
+					}
 
 						if (indirectMap[edge].indexOf(app) === -1) {
 							indirectMap[edge].push(app);
 						}
 
-					}
 				}
+
+
 			} catch (e) {
 				// ignore
 			}

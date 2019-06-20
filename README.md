@@ -7,8 +7,4 @@ first install dependencies
 
 crawl images
 
-`npm run crawl-images`
-
-resize images
-
-`npm run resize`
+`npm run crawl-all`
