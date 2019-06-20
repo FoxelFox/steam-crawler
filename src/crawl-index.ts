@@ -37,7 +37,7 @@ async function run() {
 
 	let ids = items.applist.apps.map(i => i.appid);
 	if (fs.existsSync("crawled-meta/hidden.json")) {
-		ids = ids.concat(fs.readFileSync("crawled-meta/hidden.json").toJSON());
+		ids = ids.concat(JSON.parse(fs.readFileSync("crawled-meta/hidden.json").toString()));
 	}
 
 	const count = ids.length;
