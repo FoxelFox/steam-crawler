@@ -8,8 +8,8 @@ const items = {};
 
 async function run() {
 
+	const list = await getItems(true);
 
-	const list = await getItems();
 	const count = list.applist.apps.length;
 	let appIndex = 0;
 	for (const app of list.applist.apps) {

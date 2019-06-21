@@ -25,7 +25,7 @@ function fetch(path) {
 function crawl(path: string, fileName: string) {
 	return new Promise(async (resolve) => {
 
-		items =  await getItems();
+		items =  await getItems(true);
 
 		if (!fs.existsSync("crawled")) {
 			fs.mkdirSync("crawled");
