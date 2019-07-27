@@ -1,6 +1,7 @@
 import * as ssim from "image-ssim"
 import * as fs from "fs";
 import * as jpg from "jpeg-js";
+import clear = require("clear");
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
 
@@ -44,6 +45,10 @@ async function run() {
 		}
 
 		i++;
+		clear();
+		console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
+
+
 	}
 
 
