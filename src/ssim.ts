@@ -33,7 +33,7 @@ async function run() {
 		const values = [];
 
 		for (const y of apps) {
-			if (x < y) {
+			if (x !== y) {
 				values.push({key: y, value: ssim.compare(images[x], images[y]).ssim});
 			}
 		}
