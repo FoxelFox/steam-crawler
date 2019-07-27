@@ -41,7 +41,6 @@ async function run() {
 
 		for (const match of bestMatches) {
 			csv += [x, match.key, match.value].join("|") + "\n";
-			csv += [match.key, x, match.value].join("|") + "\n";
 		}
 
 		i++;
