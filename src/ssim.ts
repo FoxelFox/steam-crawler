@@ -4,37 +4,37 @@ import * as jpg from "jpeg-js";
 import clear = require("clear");
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
-
-function load(id) {
-	return {
-		data: jpg.decode(fs.readFileSync("crawled/" + id + "/2.jpg")).data,
-		width: 2,
-		height: 2,
-		channels: 3
-	}
-}
+const images = {};
 
 async function run() {
 
-	const apps = fs.readdirSync("crawled");
-
-
+	let  apps = fs.readdirSync("crawled");
 	let i = 0;
+	const filesNotFound = [];
+	for (const id of apps) {
+		try {
+			images[id] = {
+				data: jpg.decode(fs.readFileSync("crawled/" + id + "/2.jpg")).data,
+				width: 2,
+				height: 2,
+				channels: 3
+			}
+		} catch (e) {
+			filesNotFound.push(id);
+		}
+	}
+
+	apps = apps.filter((e) => filesNotFound.indexOf(e) === -1);
+
 	const count = apps.length;
+
 	for (const x of apps) {
 
 		const values = [];
 
 		for (const y of apps) {
 			if (x < y) {
-
-				try {
-					values.push({key: y, value: ssim.compare(load(x), load(y)).ssim});
-				} catch (e) {
-					// ignore
-				}
-
-
+				values.push({key: y, value: ssim.compare(images[x], images[y]).ssim});
 			}
 		}
 		const bestMatches = values.sort((a, b) => b.value - a.value).slice(0, 16);
