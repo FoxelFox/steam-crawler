@@ -12,7 +12,8 @@ async function run() {
 
 		if (!fs.existsSync("crawled/" + app+ "/" + process.argv[2] + ".jpg")) {
 			try {
-				await sharp("crawled/" + app+ "/header.jpg").resize(process.argv[2], process.argv[2]).toFile("crawled/" + app + "/" + process.argv[2] + ".jpg")
+				const size = parseInt(process.argv[2]);
+				await sharp("crawled/" + app+ "/header.jpg").resize(size, size).toFile("crawled/" + app + "/" + process.argv[2] + ".jpg")
 			} catch (e) {
 				// ignore
 			}
