@@ -13,7 +13,7 @@
     "tensorflow": "npm run build && node dist/tensorflow.js",
     "resize": "npm run build && node dist/resize.js 2",
     "crawl-all-continue": "npm run build && node dist/crawl-index.js && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js",
-    "crawl-all": "npm run build && node dist/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js"
+    "crawl-all": "npm run build && node dist/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/resize.js 2 && node dist/ssim.js && node dist/items.js"
   },
   "repository": {
     "type": "git",
