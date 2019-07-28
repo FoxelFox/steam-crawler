@@ -31,19 +31,30 @@ async function run() {
 
 	const pool = Pool(() => spawn<SSIMWorker>(new Worker("./thread")));
 
-
-	for (const item of apps) {
-		pool.queue(async thread => {
-			csv += await thread.work(item, apps, images);
-
-			i++;
-			clear();
-			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
-		});
+	try {
+		let index = 0;
+		while (index < apps.length) {
+			const items = apps.slice(index, index + 1000);
+			pool.queue(async thread => {
+				csv += await thread.work(items, apps, images);
+				i += 1000;
+				clear();
+				console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
+			});
+			index += 1000;
+		}
+	} catch (e) {
+		console.log(e);
+		// fuck it
 	}
 
-	await pool.completed();
-	await pool.terminate();
+	try {
+		await pool.completed();
+		await pool.terminate();
+	} catch (e) {
+
+	}
+	
 }
 
 run().then(() => {
