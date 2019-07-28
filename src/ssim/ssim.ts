@@ -1,10 +1,12 @@
-import * as ssim from "image-ssim"
 import * as fs from "fs";
 import * as jpg from "jpeg-js";
 import clear = require("clear");
+import { spawn, Thread, Worker, Pool } from "threads"
+import {SSIMWorker} from "./thread";
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
 const images = {};
+const size = parseInt(process.argv[2]);
 
 async function run() {
 
@@ -14,9 +16,9 @@ async function run() {
 	for (const id of apps) {
 		try {
 			images[id] = {
-				data: jpg.decode(fs.readFileSync("crawled/" + id + "/2.jpg")).data,
-				width: 2,
-				height: 2,
+				data: jpg.decode(fs.readFileSync("crawled/" + id + "/" + size + ".jpg")).data,
+				width: size,
+				height: size,
 				channels: 3
 			}
 		} catch (e) {
@@ -25,33 +27,18 @@ async function run() {
 	}
 
 	apps = apps.filter((e) => filesNotFound.indexOf(e) === -1);
-
 	const count = apps.length;
 
-	for (const x of apps) {
+	const pool = Pool(() => spawn<SSIMWorker>(new Worker("./thread")));
 
-		const values = [];
-
-		for (const y of apps) {
-			if (x !== y) {
-				values.push({key: y, value: ssim.compare(images[x], images[y]).ssim});
-			}
-		}
-		const bestMatches = values.sort((a, b) => b.value - a.value).slice(0, 16);
-
-		for (const match of bestMatches) {
-			csv += [x, match.key, match.value].join("|") + "\n";
-		}
-
-		i++;
-		clear();
-		console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
-
-
+	for (const item of apps) {
+		pool.queue(async thread => {
+			csv += await thread.work(item, apps, images);
+		});
 	}
 
-
-
+	await pool.completed();
+	await pool.terminate();
 }
 
 run().then(() => {
