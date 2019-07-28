@@ -31,9 +31,14 @@ async function run() {
 
 	const pool = Pool(() => spawn<SSIMWorker>(new Worker("./thread")));
 
+
 	for (const item of apps) {
 		pool.queue(async thread => {
 			csv += await thread.work(item, apps, images);
+
+			i++;
+			clear();
+			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
 		});
 	}
 
