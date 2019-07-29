@@ -5,7 +5,7 @@ import { spawn, Thread, Worker, Pool } from "threads"
 import {SSIMWorker} from "./thread";
 
 let csv = "itemIdPremise|itemIdConclusion|support\n";
-const images = {};
+let images = {};
 const size = parseInt(process.argv[2]);
 
 async function run() {
@@ -21,9 +21,19 @@ async function run() {
 				height: size,
 				channels: 3
 			}
+
 		} catch (e) {
 			filesNotFound.push(id);
 		}
+	}
+
+
+
+	fs.writeFileSync("crawled-meta/4.json", JSON.stringify(images));
+	return ;
+
+	for (const id in images) {
+		images[id].data = new Buffer(images[id].data)
 	}
 
 	apps = apps.filter((e) => filesNotFound.indexOf(e) === -1);
@@ -36,7 +46,8 @@ async function run() {
 		while (index < apps.length) {
 			const items = apps.slice(index, index + 1000);
 			pool.queue(async thread => {
-				csv += await thread.work(items, apps, images);
+				const result = await thread.work(items, apps, images);
+				csv += result;
 				i += 1000;
 				clear();
 				console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%");
