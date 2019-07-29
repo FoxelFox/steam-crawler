@@ -27,15 +27,6 @@ async function run() {
 		}
 	}
 
-
-
-	fs.writeFileSync("crawled-meta/4.json", JSON.stringify(images));
-	return ;
-
-	for (const id in images) {
-		images[id].data = new Buffer(images[id].data)
-	}
-
 	apps = apps.filter((e) => filesNotFound.indexOf(e) === -1);
 	const count = apps.length;
 
