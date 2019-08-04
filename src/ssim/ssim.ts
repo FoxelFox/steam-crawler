@@ -28,10 +28,13 @@ function run(): Promise<void> {
 		}
 
 		apps = apps.filter((e) => filesNotFound.indexOf(e) === -1);
+		apps = apps.sort((a, b) => parseInt(a) - parseInt(b));
+
+		fs.writeFileSync("crawled-meta/identifiers.json", JSON.stringify(apps));
 		let data = [];
 
 		let index = 0;
-		for (const id in images) {
+		for (const id of apps) {
 			data.push(images[id].data);
 		}
 
