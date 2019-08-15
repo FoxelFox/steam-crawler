@@ -1,7 +1,9 @@
-import {getItems} from "./utils";
+import {getItems} from "../utils";
 import request = require("request");
 import * as fs from "fs";
 import clear = require("clear");
+import {Pool, Worker, spawn} from "threads/dist";
+import {IndexWorker} from "./worker";
 
 let items;
 
@@ -40,32 +42,44 @@ async function run() {
 		ids = ids.concat(JSON.parse(fs.readFileSync("crawled-meta/hidden.json").toString()));
 	}
 
+
+	const pool = Pool(() => spawn<IndexWorker>(new Worker("./worker")));
 	const count = ids.length;
 
 	for (const id of ids) {
 
-		const appFileName = "crawled" + "/" + id + "/index.html";
-		const appFolderName = "crawled" + "/" + id.toString();
+		pool.queue(async thread => {
+			const appFileName = "crawled" + "/" + id + "/index.html";
+			const appFolderName = "crawled" + "/" + id.toString();
 
-		if (!fs.existsSync(appFolderName)) {
-			fs.mkdirSync(appFolderName);
-		}
-
-
-		if (!fs.existsSync(appFileName) || process.argv[2] === "force") {
-			try {
-				const index = await getIndex(id);
-				fs.writeFileSync(appFileName, index);
-				created++;
-			} catch (e) {
-				error++;
+			if (!fs.existsSync(appFolderName)) {
+				fs.mkdirSync(appFolderName);
 			}
-		}
 
-		clear();
 
-		++i;
-		console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%", "created", created, "errors", error);
+			if (!fs.existsSync(appFileName) || process.argv[2] === "force") {
+				try {
+					const index = await thread.getIndex(id);
+					fs.writeFileSync(appFileName, index);
+					created++;
+				} catch (e) {
+					error++;
+				}
+			}
+
+			clear();
+
+			++i;
+			console.log(i, 'of', count, 'items', (i / count * 100).toFixed(2) + "%", "created", created, "errors", error);
+		});
+
+
+	}
+
+	try {
+		await pool.completed();
+		await pool.terminate();
+	} catch (e) {
 
 	}
 }
