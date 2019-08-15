@@ -5,6 +5,10 @@ first install dependencies
 
 `npm i`
 
-crawl images
+crawl images `npm run crawl-images`
 
-`npm run crawl-all`
+crawl index.html `npm run crawl-index`
+
+resize crawled images to *x* size index.html `npm run resize n`
+
+All crawled content is located in the folder crawled.
