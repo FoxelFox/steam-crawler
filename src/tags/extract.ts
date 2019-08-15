@@ -11,14 +11,20 @@ async function run() {
     const poolCompare = Pool(() => spawn<CompareWorker>(new Worker("./compare-worker")));
 
     let csv = "p|c|s\n";
+    fs.writeFileSync("crawled-meta/tag-results.csv", csv);
     let i = 0;
 
     const map = {};
     let errorLoad = 0;
+    const appsWithTags = [];
     for (const app of apps) {
         poolLoad.queue(async thread => {
             try {
-                map[app] = await thread.getTags(app);
+                const tags = await thread.getTags(app);
+                if(Object.keys(tags).length) {
+                    appsWithTags.push(app);
+                    map[app] = tags;
+                }
             } catch (e) {
                 errorLoad++;
             }
@@ -32,16 +38,18 @@ async function run() {
         // hmm ?
     }
 
-    const count = apps.length;
+    const count = appsWithTags.length;
+
+
 
     let index = 0;
-    while (index < apps.length) {
-        const items = apps.slice(index, index + 100);
+    while (index < appsWithTags.length) {
+        const items = appsWithTags.slice(index, index + 100);
         poolCompare.queue(async thread => {
             try {
                 const result = await thread.getBestMatches(items, map);
-                csv += result;
 
+                fs.appendFileSync("crawled-meta/tag-results.csv", result);
                 clear();
 
                 i += 100;
@@ -52,10 +60,6 @@ async function run() {
         });
         index += 100;
     }
-
-
-
-    fs.writeFileSync("crawled-meta/tag-results.csv", csv);
 }
 
 run().then(() => {
