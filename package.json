@@ -8,13 +8,14 @@
     "crawl-index": "npm run build && node dist/index/crawl-index.js",
     "crawl-images": "npm run build && node dist/crawl-images.js header",
     "more-like-this": "npm run build && node dist/more-like-this.js",
-    "items": "npm run build && node dist/items.js",
+    "items": "npm run build && node dist/items.js header",
     "ssim": "npm run build && node dist/ssim/ssim.js 4",
     "extract-tags": "npm run build && node dist/tags/extract.js",
     "tensorflow": "npm run build && node dist/tensorflow.js",
-    "resize": "npm run build && node dist/resize.js",
-    "crawl-all-continue": "npm run build && node dist/crawl-index.js && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js",
-    "crawl-all": "npm run build && node dist/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/resize.js 4 && node dist/ssim/ssim.js 4 && node dist/items.js"
+    "resize": "npm run build && node dist/resize.js 128",
+    "crawl-all-continue": "npm run build && node dist/index/crawl-index.js && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js",
+    "crawl-all": "npm run build && node dist/index/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/resize.js 4 && node dist/ssim/ssim.js 4 && node dist/items.js",
+    "server": "ws"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "typescript": "^3.5.1"
   },
   "dependencies": {
+    "local-web-server": "^4.2.1",
     "threads": "^1.0.0-beta.3",
     "tiny-worker": "^2.2.0"
   }

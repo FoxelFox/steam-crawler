@@ -15,22 +15,26 @@ async function run() {
 	for (const app of list.applist.apps) {
 		appIndex++;
 		try {
-			const palette = await Vibrant.from('crawled/' + app.appid + '/' + process.argv[2] + '.jpg').getPalette();
-			const colors = palette.Muted.getRgb();
+			const file = 'crawled/' + app.appid + '/' + process.argv[2] + '.jpg';
+			if (fs.existsSync(file)) {
+				const palette = await Vibrant.from(file).getPalette();
+				const colors = palette.Muted.getRgb();
 
-			let colorIndex = 0;
-			for (const color of colors) {
-				colors[colorIndex] = Math.floor(color);
-				colorIndex++;
+				let colorIndex = 0;
+				for (const color of colors) {
+					colors[colorIndex] = Math.floor(color);
+					colorIndex++;
+				}
+
+				items[app.appid] = {
+					name: app.name,
+					color: colors
+				};
+
+				clear();
+				console.log(appIndex, 'of', count, 'items', (appIndex / count * 100).toFixed(2) + "%");
 			}
 
-			items[app.appid] = {
-				name: app.name,
-				color: colors
-			};
-
-			clear();
-			console.log(appIndex, 'of', count, 'items', (appIndex / count * 100).toFixed(2) + "%");
 		} catch (e) {
 			// ignore
 		}
