@@ -4,10 +4,12 @@ const search = "This item is currently unavailable in your region"
 
 async function run() {
     return new Promise((resolve) => {
-        const apps = fs.readdirSync("crawled");
+        let apps = fs.readdirSync("crawled");
 
         const items = []
         let i = 0
+
+        apps = apps.sort((a,b) => parseInt(a) - parseInt(b))
         for (const app of apps) {
             try {
 
