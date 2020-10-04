@@ -15,7 +15,10 @@
     "resize": "npm run build && node dist/resize.js 128",
     "crawl-all-continue": "npm run build && node dist/index/crawl-index.js && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/more-like-this.js && node dist/items.js",
     "crawl-all": "npm run build && node dist/index/crawl-index.js force && node dist/crawl-images.js header && node dist/resize.js 128 && node dist/resize.js 4 && node dist/ssim/ssim.js 4 && node dist/items.js",
-    "server": "ws"
+    "server": "ws",
+    "locked-games": "npm run build && node dist/locked-games.js",
+    "html-list-all": "npm run build && node dist/html-list-all.js",
+    "games-need-login": "npm run build && node dist/games-need-login.js"
   },
   "repository": {
     "type": "git",
