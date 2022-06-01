@@ -37,7 +37,7 @@
     "jpeg-js": "^0.3.5",
     "node-vibrant": "^3.2.0-alpha",
     "request": "^2.88.0",
-    "sharp": "^0.22.1",
+    "sharp": "^0.30.5",
     "typescript": "^3.5.1"
   },
   "dependencies": {
